@@ -1,0 +1,26 @@
+# Build
+bin/
+obj/
+dist/
+node_modules/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Publish
+publish/
+*.Publish.xml
+
+# Environment
+.env
+appsettings.Development.json
+
+# Angular
+/src/app/environments/*.ts
