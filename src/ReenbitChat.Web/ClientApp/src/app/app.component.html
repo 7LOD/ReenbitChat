@@ -1,0 +1,14 @@
+<h2>Reenbit Chat</h2>
+<label>Room: <input [(ngModel)]="room" /></label>
+<label>User: <input [(ngModel)]="user" (change)="saveUser()" /></label>
+<button (click)="chat.join(room)">Join</button>
+
+
+<div style="height:300px; overflow:auto; border:1px solid #ccc; margin:8px 0; padding:8px;">
+  <div *ngFor="let m of chat.messages">
+    <b>{{m.userName}}</b> [{{m.room}}] — {{m.text}} <small>{{m.createdAtUtc | date:'short'}}</small>
+  </div>
+</div>
+
+<input [(ngModel)]="text" placeholder="Type message..." />
+<button (click)="send()">Send</button>
