@@ -27,18 +27,18 @@ Proof of Concept (**Stage #1**) — real-time чат на **.NET 8**, **Entity F
 
 ## 🧱 Solution Structure
 
+
 ReenbitChat/
 ├── src/
-│   ├── ReenbitChat.Domain/
-│   ├── ReenbitChat.Application/
-│   ├── ReenbitChat.Infrastructure/
-│   └── ReenbitChat.Web/
-│       ├── Hubs/
-│       ├── Endpoints/
-│       ├── Program.cs
-│       └── ClientApp/
+│ ├── ReenbitChat.Domain/
+│ ├── ReenbitChat.Application/
+│ ├── ReenbitChat.Infrastructure/
+│ └── ReenbitChat.Web/
+│ ├── Hubs/
+│ ├── Endpoints/
+│ ├── Program.cs
+│ └── ClientApp/
 └── README.md
-
 ---
 
 ## ⚙️ Local Run
