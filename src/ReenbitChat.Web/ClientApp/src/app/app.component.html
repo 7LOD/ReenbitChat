@@ -1,4 +1,30 @@
-<h2>Reenbit Chat</h2>
+<div class="max-w-xl mx-auto bg-white shadow-lg rounded-xl p-4">
+  <h2 class="text-2xl fond-bold text-center mb-4">💬 Reenbit Chat</h2>
+
+  <div class="flex gap-2 mb-3">
+    <input [(ngModel)]="room" class="border rounded px-2 py-1 flex-1" placeholder="Room..." />
+    <input [(ngModel)]="user" class="border rounded px-2 py-1 flex-1" placeholder="user..." (change)="saveUser()" />
+    <button (click)="chat.join(room)" class="bg-blue-500 text-white rounded px-4">Join</button>
+  </div>
+
+  <div class="h-80 overflow-y-auto border rounded p-3 space-y-1 bg-grat-50">
+    <div *ngFor="let m of chat.messages"
+         [ngClass]="{
+         'text-green-600': m.sentiment === 1,
+         'text-gray-600': m.sentiment === 2,
+         'text-red-600': m.sentiment === 3}">
+      <b>{{m.userName}}</b> [{{m.room}}] - [{{m.text}}]
+      <small class="text-grey-400 ml-1">{{m.createdAtUtc | date:`shortTime`}}</small>
+    </div>
+  </div>
+
+  <div class="flex mt-3 gap-2">
+    <input [(ngModel)]="text" class="border rounded flex-1 px-2 py-1" placeholder="TypeMessage..." />
+    <button (click)="send()" class="bg-green-500 text-white rounded px-4">Send</button>
+  </div>
+</div>
+
+<!--<h2>Reenbit Chat</h2>
 <label>Room: <input [(ngModel)]="room" /></label>
 <label>User: <input [(ngModel)]="user" (change)="saveUser()" /></label>
 <button (click)="chat.join(room)">Join</button>
@@ -11,4 +37,4 @@
 </div>
 
 <input [(ngModel)]="text" placeholder="Type message..." />
-<button (click)="send()">Send</button>
+<button (click)="send()">Send</button>-->

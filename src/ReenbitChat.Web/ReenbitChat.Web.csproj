@@ -22,4 +22,8 @@
     <ProjectReference Include="..\ReenbitChat.Infrastructure\ReenbitChat.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\tailwind.config.js" />
+  </ItemGroup>
+
 </Project>

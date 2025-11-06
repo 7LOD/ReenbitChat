@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 
 export interface MessageDto {
-  id: string, userName: string, text: string, room: string, createdAtUtc: string, sentiment: number;
+  id: string,
+  userName: string,
+  text: string,
+  room: string,
+  createdAtUtc: string,
+  sentiment: number;
 }
 @Injectable({ providedIn: 'root' })
 export class ChatService {
@@ -11,19 +16,32 @@ export class ChatService {
 
   start(baseUrl = 'http://localhost:5119') {
     this.hub = new signalR.HubConnectionBuilder()
-      .withUrl('${baseUrl}/hubs/chat', { withCredentials: true })
+      .withUrl(`${baseUrl}/hubs/chat`, { withCredentials: true })
       .withAutomaticReconnect()
       .build();
 
     this.hub.on('ReceiveMessage', (m: MessageDto) => {
+      console.log('Message received:', m);
       this.messages.push(m);
     });
 
-    return this.hub.start();
+    this.hub.onreconnected(id => console.log('Reconnected:', id));
+    this.hub.onreconnecting(err => console.warn('Reconnecting...', err));
+    this.hub.onclose(err => console.log('Hub closed:', err));
+
+    console.log('Connecting to the SignalR');
+
+    return this.hub.start()
+      .then(() => console.log('SignalR connected'))
+      .catch(err => console.error('SignalR start error', err));
   }
 
-  join(room: string) { return this.hub!.invoke('JoinRoom', room); }
+  join(room: string) {
+    console.log('Join room', room);
+    return this.hub!.invoke('JoinRoom', room);
+  }
   send(room: string, userName: string, text: string) {
+    console.log('Sending:', { room, userName, text });
     return this.hub!.invoke('SendMessage', { room, userName, text });
   }
 }
