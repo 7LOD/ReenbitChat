@@ -1,6 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-
+import { environment } from '../environment';
+import { first, firstValueFrom } from 'rxjs';
+console.log('API URL:', environment.apiUrl);
 export interface MessageDto {
   id: string,
   userName: string,
@@ -14,7 +17,9 @@ export class ChatService {
   private hub?: signalR.HubConnection;
   public messages: MessageDto[] = [];
 
-  start(baseUrl = 'http://localhost:5119') {
+  constructor(private http: HttpClient) { } 
+
+  start(baseUrl = environment.apiUrl) {
     this.hub = new signalR.HubConnectionBuilder()
       .withUrl(`${baseUrl}/hubs/chat`, { withCredentials: true })
       .withAutomaticReconnect()
@@ -43,5 +48,16 @@ export class ChatService {
   send(room: string, userName: string, text: string) {
     console.log('Sending:', { room, userName, text });
     return this.hub!.invoke('SendMessage', { room, userName, text });
+  }
+
+  async loadHistory(room: string): Promise<MessageDto[]> {
+    const url = `${environment.apiUrl}/api/messages/history?room=${room}&take=50`;
+    try {
+      const data = await firstValueFrom(this.http.get<MessageDto[]>(url));
+      return data ?? [];
+    } catch (e) {
+      console.error(`loadHistory error:`, e);
+      return [];
+    }
   }
 }

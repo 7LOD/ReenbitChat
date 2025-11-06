@@ -25,7 +25,14 @@ namespace ReenbitChat.Web.Hubs
             db.Messages.Add(message);
             await db.SaveChangesAsync();
 
-            var dto = new MessageDto(message.Id, message.UserName, message.Text, message.Room, message.CreatedAtUtc, (int)message.Sentiment);
+            var dto = new MessageDto(
+                message.Id,
+                message.UserName,
+                message.Text,
+                message.Room,
+                message.CreatedAtUtc,
+                (int)message.Sentiment
+);
             await Clients.Group(message.Room).SendAsync("ReceiveMessage", dto);
         }
         public async Task<List<MessageDto>> History(string room, int take = 50)

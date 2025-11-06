@@ -18,7 +18,16 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     await this.chat.start();
-    await this.chat.join(this.room);
+    await this.joinRoom(this.room);
+  }
+
+  async joinRoom(room: string) {
+    await this.chat.join(room);
+
+    const history = await this.chat.loadHistory(room);
+    console.log('History loaded:', history);
+
+    this.chat.messages = (history ?? []).reverse();
   }
 
   async send() {
