@@ -1,70 +1,80 @@
-# 💬 Reenbit Chat Application
+💬 Reenbit Chat
 
-Proof of Concept (**Stage #1**) — real-time чат на **.NET 8**, **Entity Framework Core**, **SignalR**, і **Angular 18 (Standalone)**.  
-Проєкт розроблено в рамках Reenbit Internship Challenge.
+Realtime Chat Application — Reenbit .NET Camp Test Task
 
----
+🚀 Overview
 
-## 🚀 Tech Stack
+Realtime чат-додаток, створений у межах завдання Reenbit .NET Camp, що дозволяє користувачам:
 
-**Backend**
-- ASP.NET Core 8 (Web API + SignalR)
-- EF Core + SQL Server / Azure SQL
-- CORS + Swagger UI
+Підключатися до кімнат (rooms)
 
-**Frontend**
-- Angular 18 (Standalone Components)
-- SignalR Client @microsoft/signalr
-- Tailwind / CSS
+Відправляти та отримувати повідомлення в реальному часі
 
-**Cloud**
-- Azure Web App (API)
-- Azure SQL Database
-- Azure SignalR Service
-- Azure Static Web App (Frontend)
+Переглядати історію збережених повідомлень
 
----
+Додаток побудовано на стеку .NET 8 + Angular + Azure.
 
-## 🧱 Solution Structure
+🧩 Tech Stack
+Backend
 
-```text
-ReenbitChat/
-├── src/
-│   ├── ReenbitChat.Domain/
-│   ├── ReenbitChat.Application/
-│   ├── ReenbitChat.Infrastructure/
-│   └── ReenbitChat.Web/
-│       ├── Hubs/
-│       ├── Endpoints/
-│       ├── Program.cs
-│       └── ClientApp/
-└── README.md
+ASP.NET Core 8 Web API
 
-## ⚙️ Local Run
+Entity Framework Core (SQL Server)
 
-### 🗄️ Database
-```bash
-dotnet ef database update
+SignalR (In-App / Azure SignalR ready)
 
-🔌 Backend
-dotnet run --project src/ReenbitChat.Web
+Azure SQL Database
 
-Swagger → http://localhost:5000/swagger
+Swagger UI
 
-💻 Frontend
+Frontend
+
+Angular 18
+
+TypeScript
+
+Tailwind CSS
+
+SignalR Client (@microsoft/signalr)
+
+Azure Static Web Apps
+
+☁️ Deployment
+Service	Platform	Status
+Backend API	Azure App Service	✅ Deployed
+Database	Azure SQL	✅ Deployed
+Frontend	Azure Static Web App	✅ Deployed
+
+API Base URL:
+https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net/api
+
+SignalR Hub URL:
+https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net/hubs/chat
+
+📖 Features
+
+✅ Реальний час через SignalR
+✅ Підтримка кількох кімнат
+✅ Збереження історії повідомлень у SQL
+✅ Обробка помилок + reconnect
+✅ Готовий до деплою в Azure
+
+🧠 Future Improvements
+
+ Додати Sentiment Analysis через Azure Cognitive Services
+
+ Додати авторизацію користувачів
+
+ Розширити управління кімнатами
+
+ Unit-тести (xUnit / Jasmine)
+
+🧑‍💻 How to run locally
+# Backend
+cd src/ReenbitChat.Web
+dotnet run
+
+# Frontend
 cd src/ReenbitChat.Web/ClientApp
 npm install
-ng serve
-
-
-Frontend → http://localhost:4200
-
-☁️ Azure Deployment
-
-API → Azure Web App
-
-DB → Azure SQL Database
-
-SignalR → Azure SignalR Service
-
-Frontend → Azure Static Web App
+npm start

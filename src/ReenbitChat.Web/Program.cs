@@ -15,8 +15,10 @@ builder.Services.AddSignalR();
 
 // EF Core
 builder.Services.AddDbContext<AppDbContext>(o =>
-    o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+    o.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(3)
+    ));
 // CORS
 var corsPolicy = "_reenbitCors";
 builder.Services.AddCors(options =>
