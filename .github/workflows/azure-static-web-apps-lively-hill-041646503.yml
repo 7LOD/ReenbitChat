@@ -30,7 +30,7 @@ jobs:
           action: "upload"
           app_location: "src/ReenbitChat.Web/ClientApp"
           api_location: ""
-          app_artifact_location: "dist/reenbit-chat-ui"
+          app_artifact_location: "."   # 🟢 Головне — залишити крапку!
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
