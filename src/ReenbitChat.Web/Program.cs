@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Hubs;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 Console.WriteLine("Azure SignalR connection: " + builder.Configuration["Azure:SignalR:ConnectionString"]);
-builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
-
+builder.Services.AddSignalR()
+    .AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
