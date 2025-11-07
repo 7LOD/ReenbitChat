@@ -17,7 +17,8 @@ namespace ReenbitChat.Web.Endpoints
                 .Take(take)
                 .ToListAsync();
                 return Results.Ok(data);
-            });
+            })
+            .WithTags("Messages");
             return app;
         }
     }

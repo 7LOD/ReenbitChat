@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Infrastructure;
+using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
 using System;
 
@@ -48,6 +49,7 @@ app.UseRouting();
 app.UseCors(corsPolicy);
 
 // --- Map Hubs & Controllers ---
+app.MapMessages();
 app.MapHub<ChatHub>("/hubs/chat");
 app.MapControllers();
 

@@ -70,7 +70,7 @@ export class ChatService {
   }
 
   async loadHistory(room: string): Promise<MessageDto[]> {
-    const url = `${environment.apiUrl}/messages/history?room=${room}&take=50`;
+    const url = `${environment.apiUrl}/api/messages?room=${room}&take=50`;
     console.log('📡 Loading history from:', url);
     try {
       const data = await firstValueFrom(this.http.get<MessageDto[]>(url));
