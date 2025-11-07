@@ -5,15 +5,19 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Services ---
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-Console.WriteLine("Azure SignalR connection: " + builder.Configuration["Azure:SignalR:ConnectionString"]);
-builder.Services.AddSignalR()
-    .AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
+
+// SignalR (In-App, без Azure)
+builder.Services.AddSignalR();
+
+// EF Core
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// CORS
 var corsPolicy = "_reenbitCors";
 builder.Services.AddCors(options =>
 {
@@ -21,16 +25,17 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:4200",
-            "https://victorious-glacier-082ff5403.3.azurestaticapps.net")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+            "https://victorious-glacier-082ff5403.3.azurestaticapps.net"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
     });
 });
 
 var app = builder.Build();
-Console.WriteLine("🚀 Starting app...");
 
+// --- Middleware ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -40,13 +45,11 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors(corsPolicy);
 
-app.UseAzureSignalR(routes =>
-{
-    routes.MapHub<ChatHub>("/hubs/chat");
-});
-Console.WriteLine("✅ Registering /hubs/chat endpoint");
+// --- Map Hubs & Controllers ---
+app.MapHub<ChatHub>("/hubs/chat");
 app.MapControllers();
 
+// Health check
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
 
 app.Run();
