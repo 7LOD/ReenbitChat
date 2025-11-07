@@ -9,6 +9,9 @@
     "test": "ng test"
   },
   "private": true,
+  "engines": {
+  "node": ">=20.19.0"
+  },
   "dependencies": {
     "@angular/common": "^20.3.10",
     "@angular/compiler": "^20.3.10",
