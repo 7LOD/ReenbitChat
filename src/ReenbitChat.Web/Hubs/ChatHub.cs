@@ -3,11 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Application.Dtos;
 using ReenbitChat.Domain;
 using ReenbitChat.Infrastructure;
+using ReenbitChat.Web.Services;
 
 namespace ReenbitChat.Web.Hubs
 {
-    public class ChatHub(AppDbContext db) : Hub
+    public class ChatHub(AppDbContext db, SentimentService sentimentService) : Hub
     {
+        private readonly SentimentService _sentimentService;
+        private readonly AppDbContext _db = db;
+
         public async Task JoinRoom(string room)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, room);
@@ -22,8 +26,11 @@ namespace ReenbitChat.Web.Hubs
                 Room = string.IsNullOrWhiteSpace(req.Room) ? "general" : req.Room,
                 CreatedAtUtc = DateTime.UtcNow,
             };
-            db.Messages.Add(message);
-            await db.SaveChangesAsync();
+
+            message.Sentiment = await _sentimentService.AnalizyAsync(req.Text);
+
+            _db.Messages.Add(message);
+            await _db.SaveChangesAsync();
 
             var dto = new MessageDto(
                 message.Id,
@@ -38,11 +45,17 @@ namespace ReenbitChat.Web.Hubs
         public async Task<List<MessageDto>> History(string room, int take = 50)
         {
             room = string.IsNullOrWhiteSpace(room) ? "general" : room;
-            return await db.Messages
+            return await _db.Messages
                 .Where(m => m.Room == room)
                 .OrderByDescending(m => m.CreatedAtUtc)
                 .Take(take)
-                .Select(m => new MessageDto(m.Id, m.UserName, m.Text, m.Room, m.CreatedAtUtc, (int)m.Sentiment))
+                .Select(m => new MessageDto(
+                    m.Id,
+                    m.UserName,
+                    m.Text,
+                    m.Room,
+                    m.CreatedAtUtc,
+                    (int)m.Sentiment))
                 .ToListAsync();
         }
     }

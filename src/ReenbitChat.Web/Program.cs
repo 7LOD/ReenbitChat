@@ -2,6 +2,7 @@
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
+using ReenbitChat.Web.Services;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<SentimentService>();
 
 // SignalR (In-App, без Azure)
 builder.Services.AddSignalR();
@@ -59,3 +61,4 @@ app.MapControllers();
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
 
 app.Run();
+
