@@ -35,11 +35,12 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}  # дозволяє писати в GitHub PR
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "src/ReenbitChat.Web/ClientApp"
-          app_artifact_location: "dist/reenbit-chat-ui"
+          app_artifact_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
           api_location: ""
+
 
   # 5. Очищення при закритті PR
   close_pull_request_job:
@@ -52,3 +53,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_HILL_041646503 }}
           action: "close"
+
