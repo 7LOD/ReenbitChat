@@ -63,7 +63,7 @@ app.MapGet("api/messages/history", async (string room, AppDbContext db, int take
                 m.Room,
                 m.CreatedAtUtc,
                 (int)(m.Sentiment)))
-            .ToListAsync();
+            .ToListAsync(); 
 
         Console.WriteLine($"✅ Messages fetched: {messages.Count}");
         return Results.Ok(messages);
@@ -77,7 +77,6 @@ app.MapGet("api/messages/history", async (string room, AppDbContext db, int take
 app.MapGet("api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }))
     .WithName("Health");
 
-// ✅ ця лінія критична
 app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();
