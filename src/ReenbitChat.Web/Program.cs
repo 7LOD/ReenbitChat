@@ -43,11 +43,9 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors(corsPolicy);
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-    endpoints.MapHub<ChatHub>("/hubs/chat");
-    endpoints.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
-});
+app.MapHub<ChatHub>("/hubs/chat");
+app.MapControllers();
+
+app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
 
 app.Run();
