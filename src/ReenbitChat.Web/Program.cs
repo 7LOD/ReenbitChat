@@ -39,8 +39,10 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors(corsPolicy);
 
-
-app.MapHub<ChatHub>("/hubs/chat");
+app.UseAzureSignalR(routes =>
+{
+    routes.MapHub<ChatHub>("/hubs/chat");
+});
 Console.WriteLine("✅ Registering /hubs/chat endpoint");
 app.MapControllers();
 
