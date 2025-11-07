@@ -45,11 +45,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseRouting();
+
+
 app.UseCors(corsPolicy);
 
-app.MapMessages();
-
-app.MapGet("api/messages/history", async (string room, AppDbContext db, int take = 50 ) =>
+app.MapGet("api/messages/history", async (string room, AppDbContext db, int take = 50) =>
 {
     Console.WriteLine("it is program.cs");
     room = string.IsNullOrWhiteSpace(room) ? "general" : room;
@@ -73,8 +73,11 @@ app.MapGet("api/messages/history", async (string room, AppDbContext db, int take
 app.MapGet("api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }))
     .WithName("Health");
 
-app.MapHub<ChatHub>("/hubs/chat");
 
-
+app.MapHub<ChatHub>("/hubs/chat", options =>
+{
+    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets |
+                         Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
+});
 
 app.Run();
