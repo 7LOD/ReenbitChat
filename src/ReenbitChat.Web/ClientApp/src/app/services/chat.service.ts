@@ -43,7 +43,7 @@ export class ChatService {
   async connect(): Promise<void> {
     if (!this.hub) {
       this.hub = new signalR.HubConnectionBuilder()
-        .withUrl(`${environment.signalrHubUrl}`, { withCredentials: true })
+        .withUrl(`${environment.apiUrl}/hubs/chat`, { withCredentials: true })
         .withAutomaticReconnect()
         .build();
     }

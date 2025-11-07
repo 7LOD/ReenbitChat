@@ -10,8 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddSignalR(o => o.EnableDetailedErrors = true)
-    .AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
+builder.Services.AddSignalR(o => o.EnableDetailedErrors = true);
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(o =>
