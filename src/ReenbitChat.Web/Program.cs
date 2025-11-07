@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Application.Dtos;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
@@ -45,15 +45,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseRouting();
-
-
 app.UseCors(corsPolicy);
 
 app.MapGet("api/messages/history", async (string room, AppDbContext db, int take = 50) =>
 {
-    Console.WriteLine("it is program.cs");
     room = string.IsNullOrWhiteSpace(room) ? "general" : room;
-
     var messages = await db.Messages
         .Where(m => m.Room == room)
         .OrderByDescending(m => m.CreatedAtUtc)
@@ -73,11 +69,7 @@ app.MapGet("api/messages/history", async (string room, AppDbContext db, int take
 app.MapGet("api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }))
     .WithName("Health");
 
-
-app.MapHub<ChatHub>("/hubs/chat", options =>
-{
-    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets |
-                         Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
-});
+// ✅ ця лінія критична
+app.MapHub<ChatHub>("/hubs/chat");
 
 app.Run();
