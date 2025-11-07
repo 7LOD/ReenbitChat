@@ -19,7 +19,7 @@ jobs:
       - name: Build Angular App
         run: |
           cd src/ReenbitChat.Web/ClientApp
-          npm install
+          npm ci
           npm run build
 
       - name: Deploy to Azure Static Web Apps
@@ -28,18 +28,18 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
+          #### 👇 важливо: не даємо йому білдити повторно!
+          skip_app_build: true
           app_location: "src/ReenbitChat.Web/ClientApp"
-          api_location: ""
           app_artifact_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
+          api_location: ""
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+      - uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_HILL_041646503 }}
           action: "close"
