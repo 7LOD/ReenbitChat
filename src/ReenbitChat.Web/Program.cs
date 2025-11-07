@@ -21,14 +21,16 @@ builder.Services.AddDbContext<AppDbContext>(o =>
         sqlOptions => sqlOptions.EnableRetryOnFailure(3)
     ));
 // CORS
-var corsPolicy = "_reenbitCors";
+var corsPolicy = "AllowFrontend";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(corsPolicy, policy =>
     {
         policy.WithOrigins(
-            "http://localhost:4200",
-            "https://victorious-glacier-082ff5403.3.azurestaticapps.net"
+            "https://victorious-glacier-082ff5403.3.azurestaticapps.net",
+            "https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net",
+            "http://localhost:4200"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
