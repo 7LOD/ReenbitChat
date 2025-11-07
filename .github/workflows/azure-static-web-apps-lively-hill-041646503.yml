@@ -30,8 +30,7 @@ jobs:
           action: "upload"
           app_location: "src/ReenbitChat.Web/ClientApp"
           api_location: ""
-          app_artifact_location: "dist/reenbit-chat-ui" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_artifact_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -44,7 +43,3 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_HILL_041646503 }}
           action: "close"
-
-
-
-
