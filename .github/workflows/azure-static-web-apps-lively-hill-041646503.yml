@@ -10,48 +10,47 @@ on:
       - main
 
 jobs:
-  build_and_deploy_job:
+  build:
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
+    name: Build Angular App
     steps:
-      # 1. Завантажує репозиторій
       - uses: actions/checkout@v4
 
-      # 2. Встановлює Node.js (щоб Azure не вибрав стару версію)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      # 3. Збирає Angular-додаток
-      - name: Build Angular App
+      - name: Build Angular
+        working-directory: src/ReenbitChat.Web/ClientApp
         run: |
-          cd src/ReenbitChat.Web/ClientApp
           npm ci
           npm run build
 
-      # 4. Деплой у Azure Static Web Apps
-      - name: Deploy to Azure Static Web Apps
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-dist
+          path: src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    name: Deploy to Azure Static Web Apps
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download built artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: angular-dist
+          path: angular-dist
+
+      - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
+          app_location: "angular-dist"
           api_location: ""
           app_artifact_location: ""
-
-
-  # 5. Очищення при закритті PR
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-    steps:
-      - name: Close Pull Request
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_HILL_041646503 }}
-          action: "close"
-
-
