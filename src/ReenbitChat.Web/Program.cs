@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+Console.WriteLine("Azure SignalR connection: " + builder.Configuration["Azure:SignalR:ConnectionString"]);
 builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
 
 builder.Services.AddDbContext<AppDbContext>(o =>
@@ -28,6 +28,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+Console.WriteLine("🚀 Starting app...");
 
 if (app.Environment.IsDevelopment())
 {
@@ -40,7 +41,7 @@ app.UseCors(corsPolicy);
 
 
 app.MapHub<ChatHub>("/hubs/chat");
-
+Console.WriteLine("✅ Registering /hubs/chat endpoint");
 app.MapControllers();
 
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
