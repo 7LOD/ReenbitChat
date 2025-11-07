@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ReenbitChat.Application.Dtos;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Hubs;
 
@@ -9,25 +8,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSignalR().AddAzureSignalR(builder.Configuration["Azure:SignalR:ConnectionString"]);
 
-builder.Services.AddSignalR(o => o.EnableDetailedErrors = true);
-
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(o =>
-    o.UseSqlServer(conn, b => b.MigrationsAssembly("ReenbitChat.Infrastructure")));
+    o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var corsPolicy = "_reenbitCors";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: corsPolicy, policy =>
+    options.AddPolicy(corsPolicy, policy =>
     {
         policy.WithOrigins(
             "http://localhost:4200",
-            "https://victorious-glacier-082ff5403.3.azurestaticapps.net"
-        )
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+            "https://victorious-glacier-082ff5403.3.azurestaticapps.net")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -42,7 +38,9 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 app.UseCors(corsPolicy);
 
+
 app.MapHub<ChatHub>("/hubs/chat");
+
 app.MapControllers();
 
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
