@@ -37,9 +37,9 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "src/ReenbitChat.Web/ClientApp"
-          app_artifact_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
+          app_location: "src/ReenbitChat.Web/ClientApp/dist/reenbit-chat-ui"
           api_location: ""
+          app_artifact_location: ""
 
 
   # 5. Очищення при закритті PR
@@ -53,4 +53,5 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_LIVELY_HILL_041646503 }}
           action: "close"
+
 
