@@ -3,6 +3,7 @@ using ReenbitChat.Application.Dtos;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
+using Microsoft.Azure.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,7 @@ app.MapMessages();
 
 app.MapGet("api/messages/history", async (string room, AppDbContext db, int take = 50 ) =>
 {
+    Console.WriteLine("it is program.cs");
     room = string.IsNullOrWhiteSpace(room) ? "general" : room;
 
     var messages = await db.Messages

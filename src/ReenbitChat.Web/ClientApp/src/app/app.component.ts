@@ -22,6 +22,10 @@ export class AppComponent implements OnInit {
   }
 
   async joinRoom(room: string) {
+    console.log('Joining room:', room);
+
+    this.chat.messages = [];
+
     await this.chat.join(room);
 
     const history = await this.chat.loadHistory(room);
@@ -35,8 +39,8 @@ export class AppComponent implements OnInit {
     await this.chat.send(this.room, this.user, this.text);
     this.text = '';
   }
+
   saveUser() {
     localStorage.setItem('user', this.user);
   }
 }
-

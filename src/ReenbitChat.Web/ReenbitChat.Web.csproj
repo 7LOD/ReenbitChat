@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>bf916d52-080e-4dc7-a9ba-8789305e4673</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.32.0" />
@@ -28,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\app\environment.prod.ts" />
-    <TypeScriptCompile Include="ClientApp\src\app\environment.ts" />
+    <TypeScriptCompile Include="ClientApp\src\environments\environment.prod.ts" />
+    <TypeScriptCompile Include="ClientApp\src\environments\environment.ts" />
     <TypeScriptCompile Include="ClientApp\tailwind.config.js" />
   </ItemGroup>
 
