@@ -40,10 +40,26 @@ export class ChatService {
       .then(() => console.log('SignalR connected'))
       .catch(err => console.error('SignalR start error:', err));
   }
+  async connect(): Promise<void> {
+    if (!this.hub) {
+      this.hub = new signalR.HubConnectionBuilder()
+        .withUrl(environment.apiUrl)
+        .withAutomaticReconnect()
+        .build();
+    }
+    if (this.hub.state !== signalR.HubConnectionState.Connected) {
+      try {
+        await this.hub.start();
+        console.log('✅ Connected to hub');
+      } catch (err) {
+        console.error('❌ Hub connection failed:', err);
+      }
+    }
+  }
 
-  join(room: string) {
+  async join(room: string) {
+    await this.connect(); // 🟢 Гарантуємо з'єднання
     console.log('🟢 Joining room:', room);
-    console.log('Join room', room);
     return this.hub!.invoke('JoinRoom', room);
   }
 

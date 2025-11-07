@@ -49,23 +49,31 @@ app.UseCors(corsPolicy);
 
 app.MapGet("api/messages/history", async (string room, AppDbContext db, int take = 50) =>
 {
-    room = string.IsNullOrWhiteSpace(room) ? "general" : room;
-    var messages = await db.Messages
-        .Where(m => m.Room == room)
-        .OrderByDescending(m => m.CreatedAtUtc)
-        .Take(take)
-        .Select(m => new MessageDto(
-            m.Id,
-            m.UserName,
-            m.Text,
-            m.Room,
-            m.CreatedAtUtc,
-            (int)m.Sentiment))
-        .ToListAsync();
+    try
+    {
+        room = string.IsNullOrWhiteSpace(room) ? "general" : room;
+        var messages = await db.Messages
+            .Where(m => m.Room == room)
+            .OrderByDescending(m => m.CreatedAtUtc)
+            .Take(take)
+            .Select(m => new MessageDto(
+                m.Id,
+                m.UserName,
+                m.Text,
+                m.Room,
+                m.CreatedAtUtc,
+                (int)(m.Sentiment)))
+            .ToListAsync();
 
-    return Results.Ok(messages);
+        Console.WriteLine($"✅ Messages fetched: {messages.Count}");
+        return Results.Ok(messages);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error in history endpoint: {ex}");
+        return Results.Problem(ex.Message);
+    }
 });
-
 app.MapGet("api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }))
     .WithName("Health");
 
