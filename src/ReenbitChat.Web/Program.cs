@@ -32,7 +32,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:4200",
-            "https://happy-tree-0d64bb603.3.azurestaticapps.net"
+            "https://victorious-glacier-082ff5403.3.azurestaticapps.net"
         )
         .AllowAnyHeader()
         .AllowAnyMethod()
