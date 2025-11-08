@@ -54,8 +54,8 @@ app.UseCors(corsPolicy);
 
 app.UseAuthorization();
 // --- Map Hubs & Controllers ---
-app.MapControllers();
-app.MapHub<ChatHub>("/hubs/chat");
+app.MapControllers().RequireCors(corsPolicy);
+app.MapHub<ChatHub>("/hubs/chat").RequireCors(corsPolicy);
 app.MapMessages();
 
 

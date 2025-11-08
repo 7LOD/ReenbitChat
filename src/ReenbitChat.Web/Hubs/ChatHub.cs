@@ -9,7 +9,7 @@ namespace ReenbitChat.Web.Hubs
 {
     public class ChatHub(AppDbContext db, SentimentService sentimentService) : Hub
     {
-        private readonly SentimentService _sentimentService;
+        private readonly SentimentService _sentimentService = sentimentService;
         private readonly AppDbContext _db = db;
 
         public async Task JoinRoom(string room)
