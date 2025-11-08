@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
@@ -60,12 +61,13 @@ app.MapMessages();
 
 
 // Health check
-app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
-app.MapGet("/api/test-sentiment", async (string text, SentimentService service) =>
+app.MapGet("/api/test-sentiment", async ([FromQuery] string text, [FromServices] SentimentService service) =>
 {
     var result = await service.AnalizyAsync(text);
     return Results.Ok(new { text, result });
-});
+})
+.WithName("TestSentiment")
+.WithOpenApi();
 
 app.Run();
 
