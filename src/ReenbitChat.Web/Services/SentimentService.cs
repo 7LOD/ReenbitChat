@@ -28,7 +28,7 @@ namespace ReenbitChat.Web.Services
             {
                 var response = await _client.AnalyzeSentimentAsync(text);
                 var sentiment = response.Value.Sentiment;
-
+                Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
                 return sentiment switch
                 {
                     TextSentiment.Positive => Sentiment.Positive,
