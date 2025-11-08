@@ -7,45 +7,64 @@ namespace ReenbitChat.Web.Services
     public class SentimentService
     {
         private readonly TextAnalyticsClient _client;
-        private readonly ILogger<SentimentService> _log;
 
-        public SentimentService(IConfiguration config, ILogger<SentimentService> log)
+        public SentimentService(IConfiguration config)
         {
-            _log = log;
             var endpoint = config["AzureCognitive:Endpoint"];
             var key = config["AzureCognitive:Key"];
 
-            _log.LogInformation("Cognitive cfg: endpoint set={EndpointSet}, key set={KeySet}",
-                !string.IsNullOrWhiteSpace(endpoint),
-                !string.IsNullOrWhiteSpace(key));
+            var options = new TextAnalyticsClientOptions
+            {
+                Retry =
+        {
+            Mode = Azure.Core.RetryMode.Fixed,
+            Delay = TimeSpan.FromSeconds(1),
+            MaxRetries = 2,
+            NetworkTimeout = TimeSpan.FromSeconds(3)
+        }
+            };
 
-            if (string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(key))
-                throw new InvalidOperationException("Azure Cognitive credentials are missing. Check AzureCognitive:Endpoint and AzureCognitive:Key in configuration.");
-
-            _client = new TextAnalyticsClient(new Uri(endpoint), new AzureKeyCredential(key));
+            _client = new TextAnalyticsClient(new Uri(endpoint), new AzureKeyCredential(key), options);
         }
 
-        public async Task<int> AnalizyAsync(string text)
+        public async Task<Sentiment> AnalizyAsync(string text)
         {
+            if (string.IsNullOrWhiteSpace(text))
+                return Sentiment.None;
+
             try
             {
-                _log.LogInformation("Analyzing text len={Len}", text?.Length ?? 0);
-                var res = await _client.AnalyzeSentimentAsync(text);
-                var score = res.Value.Sentiment switch
+                Console.WriteLine($"[SentimentService] Calling API: {text}");
+                var response = await _client.AnalyzeSentimentAsync(text);
+                Console.WriteLine($"[SentimentService] Completed for '{text}'");
+
+                var sentiment = response.Value.Sentiment;
+                Console.WriteLine($"[SentimentService] Final mapping: Azure={response.Value.Sentiment} -> Enum={(int)(sentiment switch
                 {
-                    Azure.AI.TextAnalytics.TextSentiment.Positive => 1,
-                    Azure.AI.TextAnalytics.TextSentiment.Negative => -1,
-                    _ => 0
+                    TextSentiment.Positive => Sentiment.Positive,
+                    TextSentiment.Neutral => Sentiment.Neutral,
+                    TextSentiment.Negative => Sentiment.Negative,
+                    _ => Sentiment.None
+                })}");
+                Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
+                return sentiment switch
+                {
+                    TextSentiment.Positive => Sentiment.Positive,
+                    TextSentiment.Neutral => Sentiment.Neutral,
+                    TextSentiment.Negative => Sentiment.Negative,
+                    _ => Sentiment.None
                 };
-                _log.LogInformation("Analysis ok score={Score}", score);
-                return score;
+            }
+            catch (RequestFailedException ex)
+            {
+                Console.WriteLine($"[SentimentService] Azure error: {ex.Message}");
+                return Sentiment.None;
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, "Sentiment analysis failed");
-                return 0;
+                Console.WriteLine($"[SentimentService] General error: {ex.Message}");
+                return Sentiment.None;
             }
         }
     }
-
 }
