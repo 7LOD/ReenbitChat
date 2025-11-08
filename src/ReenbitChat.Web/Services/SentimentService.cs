@@ -39,6 +39,13 @@ namespace ReenbitChat.Web.Services
                 Console.WriteLine($"[SentimentService] Completed for '{text}'");
 
                 var sentiment = response.Value.Sentiment;
+                Console.WriteLine($"[SentimentService] Final mapping: Azure={response.Value.Sentiment} -> Enum={(int)(sentiment switch
+                {
+                    TextSentiment.Positive => Sentiment.Positive,
+                    TextSentiment.Neutral => Sentiment.Neutral,
+                    TextSentiment.Negative => Sentiment.Negative,
+                    _ => Sentiment.None
+                })}");
                 Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
                 return sentiment switch
                 {
