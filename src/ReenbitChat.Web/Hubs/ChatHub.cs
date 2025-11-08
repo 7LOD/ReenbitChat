@@ -19,6 +19,7 @@ namespace ReenbitChat.Web.Hubs
 
         public async Task SendMessage(SendMessageRequest req)
         {
+            var room = string.IsNullOrWhiteSpace(req.Room) ? "general" : req.Room;
             var sentiment = await _sentimentService.AnalizyAsync(req.Text);
 
             var message = new Message
@@ -26,16 +27,13 @@ namespace ReenbitChat.Web.Hubs
                 Id = Guid.NewGuid(),
                 UserName = req.UserName,
                 Text = req.Text,
-                Room = string.IsNullOrWhiteSpace(req.Room) ? "general" : req.Room,
+                Room = room,
                 CreatedAtUtc = DateTime.UtcNow,
-                Sentiment = sentiment,
+                Sentiment = (Sentiment)sentiment
             };
-
 
             _db.Messages.Add(message);
             await _db.SaveChangesAsync();
-
-            await Clients.Group(req.Room).SendAsync("ReceiveMessage", message);
 
             var dto = new MessageDto(
                 message.Id,
@@ -43,9 +41,10 @@ namespace ReenbitChat.Web.Hubs
                 message.Text,
                 message.Room,
                 message.CreatedAtUtc,
-                (int)message.Sentiment
-);
-            await Clients.Group(message.Room).SendAsync("ReceiveMessage", dto);
+                sentiment
+            );
+
+            await Clients.Group(room).SendAsync("ReceiveMessage", dto);
         }
         public async Task<List<MessageDto>> History(string room, int take = 50)
         {

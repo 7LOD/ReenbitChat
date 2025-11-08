@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
@@ -61,23 +60,28 @@ app.MapMessages();
 
 
 // Health check
-app.MapGet("/api/test-sentiment", async ([FromQuery] string text, [FromServices] SentimentService service) =>
+app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
+app.MapGet("/__version", () =>
 {
-    var result = await service.AnalizyAsync(text);
-    return Results.Ok(new { text, result });
-})
-.WithName("TestSentiment")
-.WithOpenApi();
-app.MapGet("/api/health/full", async (SentimentService sentiment, AppDbContext db) =>
-{
-    var dbOk = await db.Messages.AnyAsync();
-    var test = await sentiment.AnalizyAsync("I am happy");
+    var asm = typeof(Program).Assembly;
     return Results.Ok(new
     {
-        db = dbOk ? "ok" : "fail",
-        sentiment = test.ToString(),
-        time = DateTime.UtcNow
+        asm.GetName().Name,
+        asm.GetName().Version,
+        env = app.Environment.EnvironmentName
     });
 });
+
+app.MapGet("/__routes", (IEnumerable<EndpointDataSource> sources) =>
+{
+    var routes = sources.SelectMany(s => s.Endpoints)
+                        .OfType<RouteEndpoint>()
+                        .Select(e => e.RoutePattern.RawText)
+                        .OrderBy(x => x);
+    return Results.Ok(routes);
+});
+
+app.MapGet("/api/health/full", () => Results.Ok(new { ok = true, utc = DateTime.UtcNow }))
+   .WithName("HealthFull");
 app.Run();
 
