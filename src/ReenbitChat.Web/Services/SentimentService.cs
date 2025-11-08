@@ -39,20 +39,15 @@ namespace ReenbitChat.Web.Services
                 Console.WriteLine($"[SentimentService] Completed for '{text}'");
 
                 var sentiment = response.Value.Sentiment;
-                Console.WriteLine($"[SentimentService] Final mapping: Azure={response.Value.Sentiment} -> Enum={(int)(sentiment switch
-                {
-                    TextSentiment.Positive => Sentiment.Positive,
-                    TextSentiment.Neutral => Sentiment.Neutral,
-                    TextSentiment.Negative => Sentiment.Negative,
-                    _ => Sentiment.None
-                })}");
+                
                 Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
-                return sentiment switch
+                return response.Value.Sentiment switch
                 {
-                    TextSentiment.Positive => Sentiment.Positive,
-                    TextSentiment.Neutral => Sentiment.Neutral,
-                    TextSentiment.Negative => Sentiment.Negative,
-                    _ => Sentiment.None
+                    TextSentiment.Positive => Sentiment.Positive, 
+                    TextSentiment.Neutral => Sentiment.Neutral,   
+                    TextSentiment.Negative => Sentiment.Negative, 
+                    TextSentiment.Mixed => Sentiment.Neutral,     
+                    _ => Sentiment.None                           
                 };
             }
             catch (RequestFailedException ex)
