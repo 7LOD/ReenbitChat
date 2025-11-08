@@ -41,7 +41,7 @@ namespace ReenbitChat.Web.Hubs
                 message.Text,
                 message.Room,
                 message.CreatedAtUtc,
-                sentiment
+                SentimentMap.ToScore(message.Sentiment)
             );
 
             await Clients.Group(room).SendAsync("ReceiveMessage", dto);
@@ -59,7 +59,7 @@ namespace ReenbitChat.Web.Hubs
                     m.Text,
                     m.Room,
                     m.CreatedAtUtc,
-                    (int)m.Sentiment))
+                    SentimentMap.ToScore(m.Sentiment)))
                 .ToListAsync();
         }
     }

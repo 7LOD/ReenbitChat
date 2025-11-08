@@ -11,8 +11,8 @@
     <div *ngFor="let m of chat.messages"
          [ngClass]="{
          'text-green-600': m.sentiment === 1,
-         'text-gray-600': m.sentiment === 2,
-         'text-red-600': m.sentiment === 3}">
+         'text-gray-600': m.sentiment === 0,
+         'text-red-600': m.sentiment === -1}">
       <b>{{m.userName}}</b> [{{m.room}}] - [{{m.text}}]
       <small class="text-grey-400 ml-1">{{m.createdAtUtc | date:`shortTime`}}</small>
     </div>
