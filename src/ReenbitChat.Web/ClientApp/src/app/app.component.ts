@@ -36,15 +36,10 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   async joinRoom(room: string) {
-    console.log('Joining room:', room);
-
     this.chat.messages = [];
-
     await this.chat.join(room);
 
     const history = await this.chat.loadHistory(room);
-    console.log('History loaded:', history);
-
     this.chat.messages = (history ?? []).reverse();
     this.scrollToBottom();
   }

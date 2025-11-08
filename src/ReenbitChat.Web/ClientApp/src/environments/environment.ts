@@ -4,4 +4,3 @@
     signalrHubUrl: 'https://localhost:7131/hubs/chat'
   };
 
-console.log('💻 DEV environment loaded');

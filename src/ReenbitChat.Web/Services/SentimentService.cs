@@ -34,12 +34,9 @@ namespace ReenbitChat.Web.Services
 
             try
             {
-                Console.WriteLine($"[SentimentService] Calling API: {text}");
                 var response = await _client.AnalyzeSentimentAsync(text);
-                Console.WriteLine($"[SentimentService] Completed for '{text}'");
 
                 var sentiment = response.Value.Sentiment;
-                Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
                 return sentiment switch
                 {
                     TextSentiment.Positive => Sentiment.Positive,
@@ -50,12 +47,10 @@ namespace ReenbitChat.Web.Services
             }
             catch (RequestFailedException ex)
             {
-                Console.WriteLine($"[SentimentService] Azure error: {ex.Message}");
                 return Sentiment.None;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[SentimentService] General error: {ex.Message}");
                 return Sentiment.None;
             }
         }

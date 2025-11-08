@@ -60,7 +60,6 @@ app.MapMessages();
 
 
 // Health check
-app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
 app.MapGet("/__version", () =>
 {
     var asm = typeof(Program).Assembly;

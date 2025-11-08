@@ -3,4 +3,3 @@ export const environment = {
   apiUrl: 'https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net',
   signalrHubUrl: 'https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net/hubs/chat'
 };
-console.log('🚀 PROD environment loaded');
