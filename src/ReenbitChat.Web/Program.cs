@@ -3,7 +3,6 @@ using ReenbitChat.Infrastructure;
 using ReenbitChat.Web.Endpoints;
 using ReenbitChat.Web.Hubs;
 using ReenbitChat.Web.Services;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,13 +48,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors(corsPolicy);
 
+app.UseAuthorization();
 // --- Map Hubs & Controllers ---
-app.MapMessages();
-app.MapHub<ChatHub>("/hubs/chat");
 app.MapControllers();
+app.MapHub<ChatHub>("/hubs/chat");
+app.MapMessages();
+
 
 // Health check
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
