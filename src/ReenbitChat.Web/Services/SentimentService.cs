@@ -13,12 +13,18 @@ namespace ReenbitChat.Web.Services
             var endpoint = config["AzureCognitive:Endpoint"];
             var key = config["AzureCognitive:Key"];
 
-            if (string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(key))
-                throw new InvalidOperationException("Azure Cognitive credentials are missing. Check AzureCognitive:Endpoint and AzureCognitive:Key in configuration.");
+            var options = new TextAnalyticsClientOptions
+            {
+                Retry =
+        {
+            Mode = Azure.Core.RetryMode.Fixed,
+            Delay = TimeSpan.FromSeconds(1),
+            MaxRetries = 2,
+            NetworkTimeout = TimeSpan.FromSeconds(3)
+        }
+            };
 
-            _client = new TextAnalyticsClient(
-                new Uri(endpoint), 
-                new AzureKeyCredential(key));
+            _client = new TextAnalyticsClient(new Uri(endpoint), new AzureKeyCredential(key), options);
         }
 
         public async Task<Sentiment> AnalizyAsync(string text)

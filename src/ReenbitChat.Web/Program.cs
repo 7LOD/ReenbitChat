@@ -61,6 +61,11 @@ app.MapMessages();
 
 // Health check
 app.MapGet("/api/health", () => Results.Ok(new { ok = true, ts = DateTime.UtcNow }));
+app.MapGet("/api/test-sentiment", async (string text, SentimentService service) =>
+{
+    var result = await service.AnalizyAsync(text);
+    return Results.Ok(new { text, result });
+});
 
 app.Run();
 
