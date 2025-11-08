@@ -68,6 +68,16 @@ app.MapGet("/api/test-sentiment", async ([FromQuery] string text, [FromServices]
 })
 .WithName("TestSentiment")
 .WithOpenApi();
-
+app.MapGet("/api/health/full", async (SentimentService sentiment, AppDbContext db) =>
+{
+    var dbOk = await db.Messages.AnyAsync();
+    var test = await sentiment.AnalizyAsync("I am happy");
+    return Results.Ok(new
+    {
+        db = dbOk ? "ok" : "fail",
+        sentiment = test.ToString(),
+        time = DateTime.UtcNow
+    });
+});
 app.Run();
 
