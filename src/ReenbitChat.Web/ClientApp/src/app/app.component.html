@@ -1,26 +1,38 @@
 <div class="max-w-xl mx-auto bg-white shadow-lg rounded-xl p-4">
-  <h2 class="text-2xl fond-bold text-center mb-4">💬 Reenbit Chat</h2>
+  <h2 class="text-2xl font-bold text-center mb-4">💬 Reenbit Chat</h2>
 
   <div class="flex gap-2 mb-3">
     <input [(ngModel)]="room" class="border rounded px-2 py-1 flex-1" placeholder="Room..." />
-    <input [(ngModel)]="user" class="border rounded px-2 py-1 flex-1" placeholder="user..." (change)="saveUser()" />
+    <input [(ngModel)]="user" class="border rounded px-2 py-1 flex-1" placeholder="User..." (change)="saveUser()" />
     <button (click)="joinRoom(room)" class="bg-blue-500 text-white rounded px-4">Join</button>
   </div>
 
-  <div class="h-80 overflow-y-auto border rounded p-3 space-y-1 bg-grat-50">
+  <!-- 💬 Контейнер повідомлень -->
+  <div #scrollContainer class="h-80 overflow-y-auto border rounded p-3 space-y-1 bg-gray-50">
     <div *ngFor="let m of chat.messages"
          [ngClass]="{
-         'text-green-600': m.sentiment === 1,
-         'text-gray-600': m.sentiment === 0,
-         'text-red-600': m.sentiment === -1}">
-      <b>{{m.userName}}</b> [{{m.room}}] - [{{m.text}}]
-      <small class="text-grey-400 ml-1">{{m.createdAtUtc | date:`shortTime`}}</small>
+           'text-blue-600 italic text-center': m.isSystem,
+           'text-green-600': !m.isSystem && m.sentiment === 1,
+           'text-gray-600': !m.isSystem && m.sentiment === 0,
+           'text-red-600': !m.isSystem && m.sentiment === -1
+         }">
+
+      <!-- Системне повідомлення -->
+      <ng-container *ngIf="m.isSystem; else userMessage">
+        {{ m.text }}
+      </ng-container>
+
+      <!-- Звичайне повідомлення -->
+      <ng-template #userMessage>
+        <b>{{ m.userName }}</b> [{{ m.room }}] - [{{ m.text }}]
+        <small class="text-gray-400 ml-1">{{ m.createdAtUtc | date:'shortTime' }}</small>
+      </ng-template>
+
     </div>
   </div>
 
   <div class="flex mt-3 gap-2">
-    <input [(ngModel)]="text" class="border rounded flex-1 px-2 py-1" placeholder="TypeMessage..." />
+    <input [(ngModel)]="text" class="border rounded flex-1 px-2 py-1" placeholder="Type message..." />
     <button (click)="send()" class="bg-green-500 text-white rounded px-4">Send</button>
   </div>
 </div>
-

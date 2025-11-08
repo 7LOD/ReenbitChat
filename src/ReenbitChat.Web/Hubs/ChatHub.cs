@@ -12,10 +12,23 @@ namespace ReenbitChat.Web.Hubs
         private readonly SentimentService _sentimentService = sentimentService;
         private readonly AppDbContext _db = db;
 
-        public async Task JoinRoom(string room)
+        public async Task JoinRoom(string roomName, string userName)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, room);
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+
+            var systemMessage = new MessageDto(
+            
+                Guid.NewGuid(),
+                "System",
+                $"{userName} joined the room",
+                roomName,
+                DateTime.UtcNow,
+                0,
+                true
+            );
+            await Clients.Groups(roomName).SendAsync("ReceiveMessage", systemMessage);
         }
+
 
         public async Task SendMessage(SendMessageRequest req)
         {
@@ -59,7 +72,8 @@ namespace ReenbitChat.Web.Hubs
                     m.Text,
                     m.Room,
                     m.CreatedAtUtc,
-                    SentimentMap.ToScore(m.Sentiment)))
+                    SentimentMap.ToScore(m.Sentiment),
+                    false))
                 .ToListAsync();
         }
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from './services/chat.service';
@@ -9,7 +9,9 @@ import { ChatService } from './services/chat.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './app.component.html'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef
+
   room = 'general';
   user = localStorage.getItem('user') || 'Vasyl';
   text = '';
@@ -19,6 +21,18 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     await this.chat.start();
     await this.joinRoom(this.room);
+
+    this.chat.messagesChanged.subscribe(() => this.scrollToBottom());
+  }
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+  private scrollToBottom(): void {
+    try {
+      const el = this.scrollContainer?.nativeElement;
+      el.scrollTop = el.scrollHeight;
+    } catch (err) { }
   }
 
   async joinRoom(room: string) {
@@ -32,6 +46,7 @@ export class AppComponent implements OnInit {
     console.log('History loaded:', history);
 
     this.chat.messages = (history ?? []).reverse();
+    this.scrollToBottom();
   }
 
   async send() {

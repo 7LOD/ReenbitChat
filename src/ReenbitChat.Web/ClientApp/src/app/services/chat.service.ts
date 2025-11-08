@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
 import { firstValueFrom } from 'rxjs';
+
 console.log('API URL:', environment.apiUrl);
 export interface MessageDto {
   id: string;
@@ -11,12 +12,15 @@ export interface MessageDto {
   room: string;
   createdAtUtc: string;
   sentiment: number;
+  isSystem: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private hub?: signalR.HubConnection;
   public messages: MessageDto[] = [];
+
+  public messagesChanged = new EventEmitter<void>();
 
   constructor(private http: HttpClient) { }
 
@@ -29,6 +33,7 @@ export class ChatService {
     this.hub.on('ReceiveMessage', (m: MessageDto) => {
       console.log('Message received:', m);
       this.messages.push(m);
+      this.messagesChanged.emit();
     });
 
     this.hub.onreconnected(id => console.log('Reconnected:', id));
@@ -58,7 +63,7 @@ export class ChatService {
   }
 
   async join(room: string) {
-    await this.connect(); // 🟢 Гарантуємо з'єднання
+    await this.connect(); 
     console.log('🟢 Joining room:', room);
     return this.hub!.invoke('JoinRoom', room);
   }
