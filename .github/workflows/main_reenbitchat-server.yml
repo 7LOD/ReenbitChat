@@ -28,13 +28,13 @@ jobs:
         run: dotnet build src/ReenbitChat.Web/ReenbitChat.Web.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish src/ReenbitChat.Web/ReenbitChat.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp --no-build
+        run: dotnet publish src/ReenbitChat.Web/ReenbitChat.Web.csproj -c Release -o "./myapp" --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./myapp
 
   deploy:
     runs-on: windows-latest
@@ -60,4 +60,4 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'reenbitchat-server'
-          package: ${{env.DOTNET_ROOT}}/myapp
+          package: ./myapp
