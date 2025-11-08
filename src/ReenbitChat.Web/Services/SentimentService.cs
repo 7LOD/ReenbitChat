@@ -16,7 +16,9 @@ namespace ReenbitChat.Web.Services
             if (string.IsNullOrEmpty(endpoint) || string.IsNullOrEmpty(key))
                 throw new InvalidOperationException("Azure Cognitive credentials are missing. Check AzureCognitive:Endpoint and AzureCognitive:Key in configuration.");
 
-            _client = new TextAnalyticsClient(new Uri(endpoint), new AzureKeyCredential(key));
+            _client = new TextAnalyticsClient(
+                new Uri(endpoint), 
+                new AzureKeyCredential(key));
         }
 
         public async Task<Sentiment> AnalizyAsync(string text)
@@ -26,7 +28,10 @@ namespace ReenbitChat.Web.Services
 
             try
             {
+                Console.WriteLine($"[SentimentService] Calling API: {text}");
                 var response = await _client.AnalyzeSentimentAsync(text);
+                Console.WriteLine($"[SentimentService] Completed for '{text}'");
+
                 var sentiment = response.Value.Sentiment;
                 Console.WriteLine($"[SentimentService] '{text}' => {response.Value.Sentiment}");
                 return sentiment switch
