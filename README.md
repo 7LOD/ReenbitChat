@@ -1,62 +1,72 @@
-# 💬 Reenbit Chat (SignalR + .NET 8 + Angular 18 + Azure)
+💬 Reenbit Chat
+(SignalR + .NET 8 + Angular 18 + Azure)
 
-**Reenbit Chat** — це реальний чат-додаток із підтримкою **SignalR**, **Sentiment Analysis**, та **Azure SQL**.  
-Проєкт виконано як тестове завдання для **Reenbit Trainee Camp: Back-End Development (.NET)**.
+Reenbit Chat — це реальний чат-додаток із підтримкою SignalR, Sentiment Analysis та Azure SQL.
+Проєкт виконано як тестове завдання для Reenbit Trainee Camp: Back-End Development (.NET).
 
----
+🚀 Live Demo
 
-## 🚀 Live Demo
+🔹 Frontend (Angular): https://victorious-glacier-082ff5403.3.azurestaticapps.net
 
-- 🌐 **Frontend (Angular)**: [https://victorious-glacier-082ff5403.3.azurestaticapps.net](https://victorious-glacier-082ff5403.3.azurestaticapps.net)  
-- ⚙️ **Backend (Web API)**: [https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net](https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net)  
-- 📜 **Swagger**: `/swagger`
+🔹 Backend (Web API): https://reenbitchat-server-c0adandqbxdcczbw.westeurope-01.azurewebsites.net
 
----
+🔹 Swagger: /swagger
 
-### ⚠️ Note
-> The backend (API) is hosted on **Azure App Service** with an **Azure SQL Database** (Free Tier).  
-> It may occasionally go into sleep mode — if the API returns a 404 or timeout, wait 20–30 seconds and refresh the page.
+⚠️ Note:
+Backend (API) розгорнуто на Azure App Service з Azure SQL (Free Tier).
+Якщо API тимчасово недоступний (404 або timeout) — зачекайте 20–30 секунд і оновіть сторінку.
+Це нормальна поведінка безкоштовного тарифу Azure.
 
----
+🧠 Features
+💬 Real-time Chat
 
-## 🧠 Features
+Побудовано на ASP.NET Core SignalR
 
-### 🔹 Real-time Chat
-- Built with **ASP.NET Core SignalR**
-- Users can join chat rooms and exchange messages instantly
-- System notifications for joining users
+Користувачі можуть приєднуватись до кімнат та обмінюватися повідомленнями в реальному часі
 
-### 🔹 Sentiment Analysis (Optional Feature)
-- Integrated with **Azure Cognitive Services Text Analytics API**
-- Each message analyzed as **Positive / Neutral / Negative**
-- Messages color-coded in the UI for clarity
+Системні повідомлення про приєднання користувачів
 
-### 🔹 Data Storage
-- Messages stored in **Azure SQL Database**
-- EF Core + Code First Migrations
+😊 Sentiment Analysis (optional)
 
-### 🔹 UI (Angular + Tailwind)
-- Clean, responsive interface
-- Real-time updates via SignalR
-- Auto-scroll to new messages
-- Sentiment highlighting
+Інтеграція з Azure Cognitive Services Text Analytics API
 
-### 🔹 Deployment
-- Backend deployed on **Azure App Service (.NET 8)**
-- Frontend deployed on **Azure Static Web Apps**
-- Connected to **Azure SQL Database**
+Кожне повідомлення класифікується як Positive, Neutral або Negative
 
----
+Повідомлення підсвічуються в UI відповідним кольором
 
-## 🧩 Technologies
-- **Backend:** .NET 8, SignalR, EF Core, Azure Cognitive Services  
-- **Frontend:** Angular 18, TypeScript, TailwindCSS  
-- **Database:** Azure SQL  
-- **Hosting:** Azure App Service, Azure Static Web Apps  
+🗄️ Data Storage
 
----
+Зберігання повідомлень у Azure SQL Database
 
-## 🧑‍💻 Author
-**Vasyl Ukhal**  
-📧 [ukhal.vasyl@gmail.com](mailto:ukhal.vasyl@gmail.com)  
-🔗 [GitHub: 7LOD](https://github.com/7LOD)  
+Використано EF Core + Code First Migrations
+
+🎨 UI (Angular + TailwindCSS)
+
+Мінімалістичний адаптивний інтерфейс
+
+Реальні оновлення через SignalR
+
+Автопрокрутка до нових повідомлень
+
+Візуальне виділення настрою повідомлень
+
+☁️ Deployment
+
+Backend: Azure App Service (.NET 8)
+
+Frontend: Azure Static Web Apps
+
+Database: Azure SQL
+
+🧩 Technologies
+Layer	Stack
+Backend	.NET 8, ASP.NET Core, SignalR, EF Core, Azure Cognitive Services
+Frontend	Angular 18, TypeScript, TailwindCSS
+Database	Azure SQL
+Hosting	Azure App Service, Azure Static Web Apps
+👨‍💻 Author
+
+Vasyl Ukhal
+📧 ukhal.vasyl@gmail.com
+
+🔗 GitHub: 7LOD
